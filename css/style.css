@@ -17,12 +17,12 @@ h1 {
     margin-top: 35px;
 }
 
-canvas {
-    background-color: #222326;
-    width: 80%;
-    height: 550px;
-}
-
 .container-fluid {
     width: 95%;
+}
+
+#gradie-window {
+    background-color: #222326;
+    width: 75vw;
+    height: 70vh;
 }

@@ -1,0 +1,25 @@
+{
+  "name": "gradies-grueling-grind",
+  "version": "1.0.0",
+  "description": "A top down rogue like dungeon crawler using Phaser",
+  "main": "js/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/melissay94/gradies-grueling-grind.git"
+  },
+  "author": "Melissa Young",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/melissay94/gradies-grueling-grind/issues"
+  },
+  "homepage": "https://github.com/melissay94/gradies-grueling-grind#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "phaser": "^3.22.0"
+  }
+}
