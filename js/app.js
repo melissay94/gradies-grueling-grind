@@ -11,10 +11,17 @@ document.addEventListener("DOMContentLoaded", () => {
     game = new Phaser.Game(phaserConfig());
 });
 
-const phaserConfig = () => {
+function phaserConfig () {
+    let canvasWidth = getComputedStyle(canvas)["width"];
+    canvasWidth = parseInt(canvasWidth.slice(0, canvasWidth.length-2));
+    let canvasHeight = getComputedStyle(canvas)["height"];
+    canvasHeight = parseInt(canvasHeight.slice(0, canvasHeight.length-2));
+    let canvasBackground = getComputedStyle(canvas)["background-color"];
     return {
-        width: getComputedStyle(canvas)["width"],
-        height: getComputedStyle(canvas)["height"],
+        type: Phaser.CANVAS,
+        width: canvasWidth,
+        height: canvasHeight,
+        backgroundColor: canvasBackground,
         parent: "gradie-window",
         title: "Gradie's Grueling Grind",
         version: "0.0.1",
@@ -27,6 +34,8 @@ const phaserConfig = () => {
     };
 };
 
-const preload = () => {};
-const create = () => {};
-const update = () => {};
+function preload() {};
+function create () {
+    this.add.rectangle(100, 100, 50, 50, 0xFFFFFF);
+};
+function update () {};
