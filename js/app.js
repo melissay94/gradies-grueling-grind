@@ -2,6 +2,7 @@
 
 import Phaser from "phaser";
 import Room from "./room.js";
+import Clock from "./clock.js";
 
 const gameState = {};
 gameState.rooms = [];
@@ -30,6 +31,10 @@ const phaserConfig = {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+    const timeElement = new Clock();
+    let interval = setInterval(() => {
+        timeElement.setTime();
+    }, timeElement.interval);
     game = new Phaser.Game(phaserConfig);
 });
 

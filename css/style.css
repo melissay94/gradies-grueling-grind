@@ -21,3 +21,13 @@ h1 {
     width: 95%;
 }
 
+.player-bar {
+    display: flex;
+    width: 600px;
+    justify-content: space-around;
+    font-family: "Arbutus", sans-serif;
+}
+
+.player-bar span {
+    color:#898c27;
+}
