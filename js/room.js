@@ -1,4 +1,4 @@
-export default function(scene, color, id, x_coor, y_coor, width, height) {
+export default function(scene, player, color, id, x_coor, y_coor, width, height) {
 
     this.id = id;
     this.width = width;
@@ -11,6 +11,8 @@ export default function(scene, color, id, x_coor, y_coor, width, height) {
     this.wallYLength = (this.height - this.doorLength)/2;
     this.roomVelocity = 0;
     this.hasRendered = false;
+    this.isFocus = false;
+    this.player = player;
 
     this.walls = [];
 
@@ -86,6 +88,7 @@ export default function(scene, color, id, x_coor, y_coor, width, height) {
         this.walls.forEach(wall => {
             scene.physics.add.existing(wall);
             wall.body.immovable = true;
+            scene.physics.add.collider(this.player, wall);
         });
     }
 
@@ -139,6 +142,9 @@ export default function(scene, color, id, x_coor, y_coor, width, height) {
         } else {
             this.roomVelocity = 0;
             nextRoom.roomVelocity = 0;
+            nextRoom.setCorners();
+            this.isFocus = false;
+            nextRoom.isFocus = true;
 
         }
 
@@ -163,6 +169,9 @@ export default function(scene, color, id, x_coor, y_coor, width, height) {
         } else {
             this.roomVelocity = 0;
             nextRoom.roomVelocity = 0;
+            nextRoom.setCorners();
+            this.isFocus = false;
+            nextRoom.isFocus = true;
 
         }
 
@@ -187,7 +196,9 @@ export default function(scene, color, id, x_coor, y_coor, width, height) {
         } else {
             this.roomVelocity = 0;
             nextRoom.roomVelocity = 0;
-
+            nextRoom.setCorners();
+            this.isFocus = false;
+            nextRoom.isFocus = true;
         }
 
         for (let door in this.doors) {
@@ -208,38 +219,26 @@ export default function(scene, color, id, x_coor, y_coor, width, height) {
         if (nextRoom.doors.right.body.position.x + this.wallDepth > this.corners.topRight.x_coor) {
             this.roomVelocity = -130;
             nextRoom.roomVelocity = -130;
-
-            for (let door in this.doors) {
-                this.doors[door].body.velocity.x = this.roomVelocity;
-            }
-            for (let door in nextRoom.doors) {
-                nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity;
-            }
-            this.walls.forEach(wall => {
-                wall.body.velocity.x = this.roomVelocity;
-            });
-            nextRoom.walls.forEach(wall => {
-                wall.body.velocity.x = nextRoom.roomVelocity;
-            });
         } else {
             this.roomVelocity = 0;
             nextRoom.roomVelocity = 0;
-
-            for (let door in this.doors) {
-                this.doors[door].body.velocity.x = this.roomVelocity;
-            }
-            for (let door in nextRoom.doors) {
-                nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity;
-            }
-            this.walls.forEach(wall => {
-                wall.body.velocity.x = this.roomVelocity;
-            });
-            nextRoom.walls.forEach(wall => {
-                wall.body.velocity.x = nextRoom.roomVelocity;
-            });
             nextRoom.setCorners();
-            return false;
+            this.isFocus = false;
+            nextRoom.isFocus = true;
         }
+
+        for (let door in this.doors) {
+            this.doors[door].body.velocity.x = this.roomVelocity;
+        }
+        for (let door in nextRoom.doors) {
+            nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity;
+        }
+        this.walls.forEach(wall => {
+            wall.body.velocity.x = this.roomVelocity;
+        });
+        nextRoom.walls.forEach(wall => {
+            wall.body.velocity.x = nextRoom.roomVelocity;
+        });
     }
 
     this.destroy = function() {
