@@ -6,8 +6,6 @@ import Room from "./room.js";
 const gameState = {};
 
 let game = null;
-let currentRoom;
-let player;
 
 const phaserConfig = {
     type: Phaser.CANVAS,
@@ -39,52 +37,81 @@ function preload() {
 };
 
 function create() {
+
+    gameState.enteredDoor = false;
+
     initializeGameKeys(this);
 
-    currentRoom = new Room(this, 0xFF00FF, game.config.width, game.config.height);
-    currentRoom.setDefaultCorners();
-    currentRoom.renderWalls();
-    currentRoom.renderDoors();
+    gameState.currentRoom = new Room(this, 0xFF00FF, game.config.width, game.config.height);
+    gameState.currentRoom.setCorners();
+    gameState.currentRoom.renderWalls();
+    gameState.currentRoom.renderDoors();
 
-    player = this.add.rectangle(game.config.width/2, game.config.height/2, 50, 50, 0xFFFFFF);
+    gameState.newRoom = new Room(this, 0x00FFFF, game.config.width, game.config.height);
+    gameState.newRoom.setCorners(gameState.currentRoom.corners.topLeft.x_coor, gameState.currentRoom.corners.topLeft.y_coor - gameState.newRoom.height);
+    gameState.newRoom.renderWalls();
+    gameState.newRoom.renderDoors();
 
-    this.physics.add.existing(player);
+    gameState.player = this.add.rectangle(game.config.width/2, game.config.height/2, 50, 50, 0xFFFFFF);
 
-    for (let door in currentRoom.doors) {
-        this.physics.add.existing(currentRoom.doors[door]);
+    this.physics.add.existing(gameState.player);
+
+    for (let door in gameState.currentRoom.doors) {
+        this.physics.add.existing(gameState.currentRoom.doors[door]);
     }
 
-    // this.physics.add.overlap(player, door1, function() {
-    //     overlapDoor(this, "up");
-    // })
-
-    currentRoom.walls.forEach(wall => {
-        this.physics.add.existing(wall);
-        wall.body.immovable = true;
-        this.physics.add.collider(player, wall);
+    gameState.currentRoom.walls.forEach(wall => {
+        this.physics.add.collider(gameState.player, wall);
     });
 
-    player.body.collideWorldBounds = true;
+    gameState.newRoom.walls.forEach(wall => {
+        this.physics.add.collider(gameState.player, wall);
+    });
+
+    console.log(gameState.currentRoom.walls[0].body.position.y, gameState.newRoom.walls[0].body.position.y);
+
+    this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.top, function() {
+        gameState.enteredDoor = true;
+            
+    })
+
+    gameState.player.body.collideWorldBounds = true;
 
 };
 function update() {
-    player.body.velocity.y = 0;
-    player.body.velocity.x = 0;
+    gameState.player.body.velocity.y = 0;
+    gameState.player.body.velocity.x = 0;
 
+    if (!gameState.enteredDoor) {
 
-    if (gameState.sKey.isDown) {
-        player.body.velocity.y = 100;
+        if (gameState.sKey.isDown) {
+            gameState.player.body.velocity.y = 100;
+        }
+        if (gameState.wKey.isDown) {
+            gameState.player.body.velocity.y = -100;
+        }
+        if (gameState.dKey.isDown) {
+            gameState.player.body.velocity.x = 100;
+        }
+        if (gameState.aKey.isDown) {
+            gameState.player.body.velocity.x = -100;
+        }
+    } else {
+        if (gameState.newRoom.walls[0].body.position.y < gameState.currentRoom.corners.topLeft.y_coor) {
+            for (let i = 0; i < gameState.newRoom.walls.length; i++) {
+                gameState.currentRoom.walls[i].body.velocity.y = 130;
+                gameState.newRoom.walls[i].body.velocity.y = 130;
+            }
+            gameState.player.body.velocity.y = 70
+        } else {
+            for (let i = 0; i < gameState.newRoom.walls.length; i++) {
+                gameState.currentRoom.walls[i].body.velocity.y = 0;
+                gameState.newRoom.walls[i].body.velocity.y = 0;
+            }
+            gameState.newRoom.walls[0].body.velocity.y = 0;
+            gameState.enteredDoor = false;
+        }
     }
-    if (gameState.wKey.isDown) {
-        player.body.velocity.y = -100;
-    }
-    if (gameState.dKey.isDown) {
-        player.body.velocity.x = 100;
-    }
-    if (gameState.aKey.isDown) {
-        player.body.velocity.x = -100;
-    }
-
 };
 
 function initializeGameKeys(scene) {
@@ -96,19 +123,19 @@ function initializeGameKeys(scene) {
 }
 
 
-function overlapDoor(scene, direction) {
+// function overlapDoor(scene, direction) {
 
-    switch(direction) {
-        case "up":
-            let newRoom = new Room(scene, 0x00FFFF);
-            newRoom.createWalls()
-            break;
-        case "down":
-            break;
-        case "left":
-            break;
-        case "right":
-            break;
-    }
+//     switch(direction) {
+//         case "up":
+//             let newRoom = new Room(scene, 0x00FFFF);
+//             newRoom.createWalls()
+//             break;
+//         case "down":
+//             break;
+//         case "left":
+//             break;
+//         case "right":
+//             break;
+//     }
 
-}
+// }
