@@ -28,16 +28,33 @@ const phaserConfig = {
     fps: 30
 };
 
-const Room = function(scene) {
+const Room = function(scene, color) {
+
     this.walls = [];
+
+    this.corners = {
+        topLeft: null,
+        topRight: null,
+        bottomLeft: null,
+        bottomRight: null
+    };
+
     this.createWalls = function() {
-        renderWalls(this, scene);
+        renderWalls(this, scene, color);
     }
+
+    this.width = game.config.width;
+    this.height = game.config.height;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     game = new Phaser.Game(phaserConfig);
 });
+
+const Coordinates = function(x_coor, y_coor) {
+    this.x_coor = x_coor;
+    this.y_coor = y_coor;
+}
 
 function preload() {
 
@@ -46,7 +63,11 @@ function preload() {
 function create() {
     initializeGameKeys(this);
 
-    currentRoom = new Room(this);
+    currentRoom = new Room(this, 0xFF00FF);
+    currentRoom.corners.topLeft = new Coordinates(0, 0);
+    currentRoom.corners.topRight = new Coordinates(currentRoom.width, 0);
+    currentRoom.corners.bottomLeft = new Coordinates(0, currentRoom.height);
+    currentRoom.corners.bottomRight = new Coordinates(currentRoom.width, currentRoom.height);
     currentRoom.createWalls();
 
     player = this.add.rectangle(game.config.width/2, game.config.height/2, 50, 50, 0xFFFFFF);
@@ -58,6 +79,14 @@ function create() {
 
 
     this.physics.add.existing(player);
+    this.physics.add.existing(door1);
+    this.physics.add.existing(door2);
+    this.physics.add.existing(door3);
+    this.physics.add.existing(door4);
+
+    this.physics.add.overlap(player, door1, function() {
+        overlapDoor(this, "up");
+    })
 
     currentRoom.walls.forEach(wall => {
         this.physics.add.existing(wall);
@@ -96,7 +125,7 @@ function initializeGameKeys(scene) {
     gameState.spaceKey = scene.input.keyboard.addKey('space');
 }
 
-function renderWalls(room, scene) {    
+function renderWalls(room, scene, color) {    
 
     let wallDepth = 40;
     let doorLength = 100;
@@ -104,17 +133,39 @@ function renderWalls(room, scene) {
     let wallYLength = (game.config.height - doorLength)/2;
 
     // Left Top Wall
-    room.walls.push(scene.add.rectangle(wallXLength/2, wallDepth/2, wallXLength, wallDepth, 0xFF00FF));
-    room.walls.push(scene.add.rectangle(game.config.width - (wallXLength/2), wallDepth/2, wallXLength, wallDepth, 0xFF00FF));
+    room.walls.push(scene.add.rectangle(wallXLength/2, wallDepth/2, wallXLength, wallDepth, color));
+    // Right Top Wall
+    room.walls.push(scene.add.rectangle(game.config.width - (wallXLength/2), wallDepth/2, wallXLength, wallDepth, color));
 
-    // Left Right Wall
-    room.walls.push(scene.add.rectangle(wallDepth/2, wallYLength/2, wallDepth, wallYLength, 0xFF00FF));
-    room.walls.push(scene.add.rectangle(wallDepth/2, game.config.height - wallYLength/2, wallDepth, wallYLength, 0xFF00FF));
+    // Top Left Wall
+    room.walls.push(scene.add.rectangle(wallDepth/2, wallYLength/2, wallDepth, wallYLength, color));
+    // Bottom Left Wall
+    room.walls.push(scene.add.rectangle(wallDepth/2, game.config.height - wallYLength/2, wallDepth, wallYLength, color));
 
-    room.walls.push(scene.add.rectangle(game.config.width-(wallDepth/2), wallYLength/2, wallDepth, wallYLength, 0xFF00FF));
-    room.walls.push(scene.add.rectangle(game.config.width-(wallDepth/2), game.config.height - (wallYLength/2), wallDepth, wallYLength, 0xFF00FF));
+    // Top Right Wall
+    room.walls.push(scene.add.rectangle(game.config.width-(wallDepth/2), wallYLength/2, wallDepth, wallYLength, color));
+    // Bottom Left Wall
+    room.walls.push(scene.add.rectangle(game.config.width-(wallDepth/2), game.config.height - (wallYLength/2), wallDepth, wallYLength, color));
 
-    room.walls.push(scene.add.rectangle(wallXLength/2, game.config.height-(wallDepth/2), wallXLength, wallDepth, 0xFF00FF));
-    room.walls.push(scene.add.rectangle(game.config.width - wallXLength/2, game.config.height-(wallDepth/2), wallXLength, wallDepth, 0xFF00FF));
+    // Left Bottom Wall
+    room.walls.push(scene.add.rectangle(wallXLength/2, game.config.height-(wallDepth/2), wallXLength, wallDepth, color));
+    // Right Bottom Wall
+    room.walls.push(scene.add.rectangle(game.config.width - wallXLength/2, game.config.height-(wallDepth/2), wallXLength, wallDepth, color));
+}
+
+function overlapDoor(scene, direction) {
+
+    switch(direction) {
+        case "up":
+            let newRoom = new Room(scene, 0x00FFFF);
+            newRoom.createWalls()
+            break;
+        case "down":
+            break;
+        case "left":
+            break;
+        case "right":
+            break;
+    }
 
 }
