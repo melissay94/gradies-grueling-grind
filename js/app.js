@@ -4,6 +4,7 @@ import Phaser from "phaser";
 import Room from "./room.js";
 
 const gameState = {};
+gameState.rooms = [];
 
 let game = null;
 
@@ -45,15 +46,9 @@ function create() {
 
     initializeGameKeys(this);
 
-    gameState.currentRoom = new Room(this, 0xFF00FF, game.config.width, game.config.height);
-    gameState.currentRoom.setCorners();
-    gameState.currentRoom.renderWalls();
-    gameState.currentRoom.renderDoors();
-
-    gameState.newRoom = new Room(this, 0x00FFFF, game.config.width, game.config.height);
-    gameState.newRoom.setCorners(gameState.currentRoom.corners.topLeft.x_coor, gameState.currentRoom.corners.topLeft.y_coor - gameState.newRoom.height);
-    gameState.newRoom.renderWalls();
-    gameState.newRoom.renderDoors();
+    gameState.currentRoom = new Room(this, 0xFF00FF, gameState.rooms.length, 0, 0, game.config.width, game.config.height);
+    gameState.currentRoom.renderRoom();
+    gameState.rooms.push(gameState.currentRoom);
 
     gameState.player = this.add.rectangle(game.config.width/2, game.config.height/2, 50, 50, 0xFFFFFF);
 
@@ -63,29 +58,72 @@ function create() {
         this.physics.add.collider(gameState.player, wall);
     });
 
-    gameState.newRoom.walls.forEach(wall => {
-        this.physics.add.collider(gameState.player, wall);
-    });
-
-    //console.log(gameState.currentRoom.walls[0].body.position.y, gameState.newRoom.walls[0].body.position.y);
-
-    this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.top, function() {
+    this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.top,() => {
         gameState.enteredDoor.hasEntered = true;
         gameState.enteredDoor.direction = "top";
+
+        if (gameState.currentRoom.connectedRooms.top == null) {
+            gameState.nextRoom = new Room(this, 0x00FFFF, gameState.rooms.length, gameState.currentRoom.corners.topLeft.x_coor, gameState.currentRoom.corners.topLeft.y_coor - game.config.height, game.config.width, game.config.height);
+            gameState.nextRoom.renderRoom();
+            gameState.currentRoom.connectedRooms.top = gameState.nextRoom;
+            gameState.nextRoom.connectedRooms.bottom = gameState.currentRoom;
+        } else {
+            gameState.nextRoom = gameState.currentRoom.connectedRooms.top;
+        }
+            
+        gameState.player.body.velocity.y += 200;
+    });
+
+    this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.bottom, () => {
+        gameState.enteredDoor.hasEntered = true;
+        gameState.enteredDoor.direction = "bottom";
+
+        if (gameState.currentRoom.connectedRooms.bottom == null) {
+            gameState.nextRoom = new Room(this, 0x00FFFF, gameState.rooms.length, gameState.currentRoom.corners.bottomLeft.x_coor, gameState.currentRoom.corners.bottomLeft.y_coor, game.config.width, game.config.height);
+            gameState.nextRoom.renderRoom();
+            gameState.currentRoom.connectedRooms.bottom = gameState.nextRoom;
+            gameState.nextRoom.connectedRooms.top = gameState.currentRoom;
+        } else {
+            gameState.nextRoom = gameState.currentRoom.connectedRooms.bottom;
+        }
+            
+        gameState.player.body.velocity.y -= 200;
             
     });
 
-    // this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.bottom, function() {
-    //     gameState.enteredDoor.hasEntered = true;
-    //     gameState.enteredDoor.direction = "bottom";
-            
-    // });
+    this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.left, () => {
+        gameState.enteredDoor.hasEntered = true;
+        gameState.enteredDoor.direction = "left";
 
-    // this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.left, function() {
-    //     gameState.enteredDoor.hasEntered = true;
-    //     gameState.enteredDoor.direction = "left";
+        if (gameState.currentRoom.connectedRooms.left == null) {
+            gameState.nextRoom = new Room(this, 0x00FFFF, gameState.rooms.length, gameState.currentRoom.corners.topLeft.x_coor - game.config.width, gameState.currentRoom.corners.topLeft.y_coor, game.config.width, game.config.height);
+            gameState.nextRoom.renderRoom();
+            gameState.currentRoom.connectedRooms.left = gameState.nextRoom;
+            gameState.nextRoom.connectedRooms.right = gameState.currentRoom;
+        } else {
+            gameState.nextRoom = gameState.currentRoom.connectedRooms.left;
+        }
             
-    // });
+        gameState.player.body.velocity.x -= 200;
+            
+    });
+
+    this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.right, () => {
+        gameState.enteredDoor.hasEntered = true;
+        gameState.enteredDoor.direction = "right";
+
+        if (gameState.currentRoom.connectedRooms.right == null) {
+            gameState.nextRoom = new Room(this, 0x00FFFF, gameState.rooms.length, gameState.currentRoom.corners.topRight.x_coor, gameState.currentRoom.corners.topLeft.y_coor, game.config.width, game.config.height);
+            gameState.nextRoom.renderRoom();
+            gameState.currentRoom.connectedRooms.right = gameState.nextRoom;
+            gameState.nextRoom.connectedRooms.left = gameState.currentRoom;
+        } else {
+            gameState.nextRoom = gameState.currentRoom.connectedRooms.right;
+        }
+            
+        gameState.player.body.velocity.x += 200;
+            
+    });
 
     gameState.player.body.collideWorldBounds = true;
 
@@ -111,16 +149,16 @@ function update() {
     } else {
         switch(gameState.enteredDoor.direction) {
             case "top":
-                gameState.currentRoom.goToUpperRoom(gameState.newRoom);
+                gameState.currentRoom.goToUpperRoom(gameState.nextRoom);
                 break;
             case "bottom":
-                gameState.currentRoom.goToLowerRoom(gameState.newRoom);
+                gameState.currentRoom.goToLowerRoom(gameState.nextRoom);
                 break;
             case "left":
-                gameState.currentRoom.goToLeftRoom(gameState.newRoom);
+                gameState.currentRoom.goToLeftRoom(gameState.nextRoom);
                 break;
             case "right":
-                gameState.currentRoom.goToRightRoom(gameState.newRoom);
+                gameState.currentRoom.goToRightRoom(gameState.nextRoom);
                 break;
         }
     }

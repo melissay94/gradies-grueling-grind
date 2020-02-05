@@ -1,7 +1,10 @@
-export default function(scene, color, width, height) {
+export default function(scene, color, id, x_coor, y_coor, width, height) {
 
+    this.id = id;
     this.width = width;
     this.height = height;
+    this.x_coor = x_coor;
+    this.y_coor = y_coor;
     this.wallDepth = 40;
     this.doorLength = 100;
     this.wallXLength = (this.width - this.doorLength)/2;
@@ -33,8 +36,6 @@ export default function(scene, color, width, height) {
 
     this.renderWalls = function() {  
 
-        console.log(this.corners);
-    
         // Left Top Wall
         this.walls.push(scene.add.rectangle(
             this.corners.topLeft.x_coor + this.wallXLength/2, 
@@ -85,14 +86,16 @@ export default function(scene, color, width, height) {
             scene.physics.add.existing(wall);
             wall.body.immovable = true;
         });
-    
     }
 
-    this.setCorners = function(x=0, y=0) {        
-        this.corners.topLeft = new Coordinates(x, y);
-        this.corners.topRight = new Coordinates(x + this.width, y);
-        this.corners.bottomLeft = new Coordinates(x, y + this.height);
-        this.corners.bottomRight = new Coordinates(x + this.width, y + this.height);
+    this.renderRoom = function() {        
+        this.corners.topLeft = new Coordinates(this.x_coor, this.y_coor);
+        this.corners.topRight = new Coordinates(this.x_coor + this.width, this.y_coor);
+        this.corners.bottomLeft = new Coordinates(this.x_coor, this.y_coor + this.height);
+        this.corners.bottomRight = new Coordinates(this.x_coor + this.width, this.y_coor + this.height);
+        
+        this.renderWalls();
+        this.renderDoors();
     }
 
     this.renderDoors = function() {
@@ -147,7 +150,7 @@ export default function(scene, color, width, height) {
     }
 
     this.goToLowerRoom = function(nextRoom) {
-        if (nextRoom.doors.bottom.body.position.y > this.corners.bottomLeft.y_coor) {
+        if (nextRoom.doors.bottom.body.position.y + this.wallDepth > this.corners.bottomLeft.y_coor) {
             this.roomVelocity = -130;
             nextRoom.roomVelocity = -130;
         } else {
@@ -171,7 +174,31 @@ export default function(scene, color, width, height) {
     }
 
     this.goToLeftRoom = function(nextRoom) {
-        if (nextRoom.doors.top.body.position.y > this.corners.topLeft.y_coor) {
+        if (nextRoom.doors.left.body.position.x < this.corners.topLeft.x_coor) {
+            this.roomVelocity = 130;
+            nextRoom.roomVelocity = 130;
+        } else {
+            this.roomVelocity = 0;
+            nextRoom.roomVelocity = 0;
+
+        }
+
+        for (let door in this.doors) {
+            this.doors[door].body.velocity.x = this.roomVelocity;
+        }
+        for (let door in nextRoom.doors) {
+            nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity;
+        }
+        this.walls.forEach(wall => {
+            wall.body.velocity.x = this.roomVelocity;
+        });
+        nextRoom.walls.forEach(wall => {
+            wall.body.velocity.x = nextRoom.roomVelocity;
+        });
+    }
+
+    this.goToRightRoom = function(nextRoom) {
+        if (nextRoom.doors.right.body.position.x + this.wallDepth > this.corners.topRight.x_coor) {
             this.roomVelocity = -130;
             nextRoom.roomVelocity = -130;
         } else {
