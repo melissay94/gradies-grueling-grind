@@ -10,6 +10,7 @@ export default function(scene, color, id, x_coor, y_coor, width, height) {
     this.wallXLength = (this.width - this.doorLength)/2;
     this.wallYLength = (this.height - this.doorLength)/2;
     this.roomVelocity = 0;
+    this.hasRendered = false;
 
     this.walls = [];
 
@@ -88,14 +89,20 @@ export default function(scene, color, id, x_coor, y_coor, width, height) {
         });
     }
 
-    this.renderRoom = function() {        
+    this.setCorners = function(x_coor=0, y_coor=0) {
+        this.x_coor = x_coor;
+        this.y_coor = y_coor;
         this.corners.topLeft = new Coordinates(this.x_coor, this.y_coor);
         this.corners.topRight = new Coordinates(this.x_coor + this.width, this.y_coor);
         this.corners.bottomLeft = new Coordinates(this.x_coor, this.y_coor + this.height);
         this.corners.bottomRight = new Coordinates(this.x_coor + this.width, this.y_coor + this.height);
-        
+    }
+
+    this.renderRoom = function() {
+        this.setCorners(this.x_coor, this.y_coor);
         this.renderWalls();
         this.renderDoors();
+        this.hasRendered = true;
     }
 
     this.renderDoors = function() {
@@ -201,24 +208,51 @@ export default function(scene, color, id, x_coor, y_coor, width, height) {
         if (nextRoom.doors.right.body.position.x + this.wallDepth > this.corners.topRight.x_coor) {
             this.roomVelocity = -130;
             nextRoom.roomVelocity = -130;
+
+            for (let door in this.doors) {
+                this.doors[door].body.velocity.x = this.roomVelocity;
+            }
+            for (let door in nextRoom.doors) {
+                nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity;
+            }
+            this.walls.forEach(wall => {
+                wall.body.velocity.x = this.roomVelocity;
+            });
+            nextRoom.walls.forEach(wall => {
+                wall.body.velocity.x = nextRoom.roomVelocity;
+            });
         } else {
             this.roomVelocity = 0;
             nextRoom.roomVelocity = 0;
 
+            for (let door in this.doors) {
+                this.doors[door].body.velocity.x = this.roomVelocity;
+            }
+            for (let door in nextRoom.doors) {
+                nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity;
+            }
+            this.walls.forEach(wall => {
+                wall.body.velocity.x = this.roomVelocity;
+            });
+            nextRoom.walls.forEach(wall => {
+                wall.body.velocity.x = nextRoom.roomVelocity;
+            });
+            nextRoom.setCorners();
+            return false;
         }
+    }
+
+    this.destroy = function() {
 
         for (let door in this.doors) {
-            this.doors[door].body.velocity.x = this.roomVelocity;
-        }
-        for (let door in nextRoom.doors) {
-            nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity;
+            this.doors[door].destroy();
+            this.doors[door] = null;
         }
         this.walls.forEach(wall => {
-            wall.body.velocity.x = this.roomVelocity;
+            wall.destroy();
         });
-        nextRoom.walls.forEach(wall => {
-            wall.body.velocity.x = nextRoom.roomVelocity;
-        });
+        this.walls = [];
+        console.log(this);
     }
 }
 
