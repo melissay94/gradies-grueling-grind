@@ -38,7 +38,10 @@ function preload() {
 
 function create() {
 
-    gameState.enteredDoor = false;
+    gameState.enteredDoor = {
+        direction: null,
+        hasEntered: false
+    };
 
     initializeGameKeys(this);
 
@@ -56,10 +59,6 @@ function create() {
 
     this.physics.add.existing(gameState.player);
 
-    for (let door in gameState.currentRoom.doors) {
-        this.physics.add.existing(gameState.currentRoom.doors[door]);
-    }
-
     gameState.currentRoom.walls.forEach(wall => {
         this.physics.add.collider(gameState.player, wall);
     });
@@ -68,12 +67,25 @@ function create() {
         this.physics.add.collider(gameState.player, wall);
     });
 
-    console.log(gameState.currentRoom.walls[0].body.position.y, gameState.newRoom.walls[0].body.position.y);
+    //console.log(gameState.currentRoom.walls[0].body.position.y, gameState.newRoom.walls[0].body.position.y);
 
     this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.top, function() {
-        gameState.enteredDoor = true;
+        gameState.enteredDoor.hasEntered = true;
+        gameState.enteredDoor.direction = "top";
             
-    })
+    });
+
+    // this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.bottom, function() {
+    //     gameState.enteredDoor.hasEntered = true;
+    //     gameState.enteredDoor.direction = "bottom";
+            
+    // });
+
+    // this.physics.add.overlap(gameState.player, gameState.currentRoom.doors.left, function() {
+    //     gameState.enteredDoor.hasEntered = true;
+    //     gameState.enteredDoor.direction = "left";
+            
+    // });
 
     gameState.player.body.collideWorldBounds = true;
 
@@ -82,7 +94,7 @@ function update() {
     gameState.player.body.velocity.y = 0;
     gameState.player.body.velocity.x = 0;
 
-    if (!gameState.enteredDoor) {
+    if (!gameState.enteredDoor.hasEntered) {
 
         if (gameState.sKey.isDown) {
             gameState.player.body.velocity.y = 100;
@@ -97,19 +109,19 @@ function update() {
             gameState.player.body.velocity.x = -100;
         }
     } else {
-        if (gameState.newRoom.walls[0].body.position.y < gameState.currentRoom.corners.topLeft.y_coor) {
-            for (let i = 0; i < gameState.newRoom.walls.length; i++) {
-                gameState.currentRoom.walls[i].body.velocity.y = 130;
-                gameState.newRoom.walls[i].body.velocity.y = 130;
-            }
-            gameState.player.body.velocity.y = 70
-        } else {
-            for (let i = 0; i < gameState.newRoom.walls.length; i++) {
-                gameState.currentRoom.walls[i].body.velocity.y = 0;
-                gameState.newRoom.walls[i].body.velocity.y = 0;
-            }
-            gameState.newRoom.walls[0].body.velocity.y = 0;
-            gameState.enteredDoor = false;
+        switch(gameState.enteredDoor.direction) {
+            case "top":
+                gameState.currentRoom.goToUpperRoom(gameState.newRoom);
+                break;
+            case "bottom":
+                gameState.currentRoom.goToLowerRoom(gameState.newRoom);
+                break;
+            case "left":
+                gameState.currentRoom.goToLeftRoom(gameState.newRoom);
+                break;
+            case "right":
+                gameState.currentRoom.goToRightRoom(gameState.newRoom);
+                break;
         }
     }
 };
