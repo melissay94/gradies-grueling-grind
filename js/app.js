@@ -4,6 +4,8 @@ import Phaser from "phaser";
 import Room from "./room.js";
 import Player from "./player.js";
 import Clock from "./clock.js";
+import Enemy from "./enemy.js";
+import Adventurer from "../assets/adventurer.png";
 
 const gameState = {};
 gameState.rooms = [];
@@ -40,7 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function preload() {
-
+    
+    this.load.image('adventurer', Adventurer);
 };
 
 function create() {
@@ -64,6 +67,12 @@ function create() {
     overlapDoor(this);
 
     gameState.player.body.collideWorldBounds = true;
+
+    // Enemies
+    let enemies = this.physics.add.group();
+    enemies.add(new Enemy(this, 0, 200, 200, 40, 40, 5), true);
+
+    this.physics.add.collider(gameState.player.playerObject, enemies);
 
 };
 function update() {

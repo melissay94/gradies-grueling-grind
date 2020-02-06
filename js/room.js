@@ -104,12 +104,12 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
         this.corners.bottomRight = new Coordinates(this.x_coor + this.width, this.y_coor + this.height);
     }
 
-    this.renderRoom = function() {
+    this.renderRoom = function(sprite) {
         this.setCorners(this.x_coor, this.y_coor);
         this.renderWalls();
         this.renderDoors();
         if (this.enemies.length < 1) {
-            this.generateEnemies();
+            //this.generateEnemies(sprite);
         }
         this.hasRendered = true;
     }
@@ -215,11 +215,11 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
         this.walls = [];
     }
 
-    this.generateEnemies = function() {
+    this.generateEnemies = function(sprite) {
         let randomAmount = Math.floor((Math.random() * 4 + 1));
 
         for (let i = 0; i < randomAmount; i++) {
-            this.enemies.push(new Enemy(scene, i, 0, 0, 40, 40, 5));
+            //this.enemies.push(new Enemy(scene, i, 0, 0, 40, 40, 5));
         }
 
         let xStart = this.corners.topLeft.x_coor + this.wallDepth + 20;
@@ -228,9 +228,9 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
         let yEnd = this.corners.bottomLeft.y_coor - this.wallDepth - 20;
 
         for (let enemy of this.enemies) {
-            enemy.x_coor = Math.floor(Math.random() * (xEnd - xStart)) + xStart;
-            enemy.y_coor = Math.floor(Math.random() * (yEnd - yStart)) + yStart;
-            enemy.renderEnemy(this.player, this);
+            //enemy.x_coor = Math.floor(Math.random() * (xEnd - xStart)) + xStart;
+            //enemy.y_coor = Math.floor(Math.random() * (yEnd - yStart)) + yStart;
+            //enemy.renderEnemy(this.player, this, sprite);
         }
     }
 }
