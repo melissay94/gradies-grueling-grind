@@ -3,7 +3,6 @@ export default function(time) {
     this.interval = 1000;
 
     this.setTime = function() {
-        console.log(this);
 
         this.count++;
 

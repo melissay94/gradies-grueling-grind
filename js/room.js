@@ -9,7 +9,7 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
     this.doorLength = 100;
     this.wallXLength = (this.width - this.doorLength)/2;
     this.wallYLength = (this.height - this.doorLength)/2;
-    this.roomVelocity = 0;
+    this.roomVelocity = new Coordinates(0, 0);
     this.hasRendered = false;
     this.isFocus = false;
     this.player = player;
@@ -135,109 +135,65 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
         }
     }
 
-    this.goToUpperRoom = function(nextRoom) {
-        if (nextRoom.doors.top.body.position.y < this.corners.topLeft.y_coor) {
-            this.roomVelocity = 130;
-            nextRoom.roomVelocity = 130;
-        } else {
-            this.roomVelocity = 0;
-            nextRoom.roomVelocity = 0;
-            nextRoom.setCorners();
-            this.isFocus = false;
-            nextRoom.isFocus = true;
-
-        }
-
-        for (let door in this.doors) {
-            this.doors[door].body.velocity.y = this.roomVelocity;
-        }
-        for (let door in nextRoom.doors) {
-            nextRoom.doors[door].body.velocity.y = nextRoom.roomVelocity;
-        }
-        this.walls.forEach(wall => {
-            wall.body.velocity.y = this.roomVelocity;
-        });
-        nextRoom.walls.forEach(wall => {
-            wall.body.velocity.y = nextRoom.roomVelocity;
-        });
+    this.stopRoom = function(nextRoom) {
+        this.roomVelocity = new Coordinates(0, 0);
+        nextRoom.roomVelocity = new Coordinates(0, 0);
+        nextRoom.setCorners();
+        this.isFocus = false;
+        nextRoom.isFocus = true;
     }
 
-    this.goToLowerRoom = function(nextRoom) {
-        if (nextRoom.doors.bottom.body.position.y + this.wallDepth > this.corners.bottomLeft.y_coor) {
-            this.roomVelocity = -130;
-            nextRoom.roomVelocity = -130;
-        } else {
-            this.roomVelocity = 0;
-            nextRoom.roomVelocity = 0;
-            nextRoom.setCorners();
-            this.isFocus = false;
-            nextRoom.isFocus = true;
-
+    this.goToNextRoom = function(nextRoom, direction) {
+        switch(direction) {
+            case "top":
+                if (nextRoom.doors.top.body.position.y < this.corners.topLeft.y_coor) {
+                    this.roomVelocity.y_coor = 150;
+                    nextRoom.roomVelocity.y_coor = 150;
+                } else {
+                    this.stopRoom(nextRoom);
+                }
+                break;
+            case "bottom":
+                if (nextRoom.doors.bottom.body.position.y + this.wallDepth > this.corners.bottomLeft.y_coor) {
+                    this.roomVelocity.y_coor = -150;
+                    nextRoom.roomVelocity.y_coor = -150;
+                } else {
+                    this.stopRoom(nextRoom);
+                }
+                break;
+            case "left":
+                if (nextRoom.doors.left.body.position.x < this.corners.topLeft.x_coor) {
+                    this.roomVelocity.x_coor = 130;
+                    nextRoom.roomVelocity.x_coor = 130;
+                } else {
+                    this.stopRoom(nextRoom)
+                }
+                break;
+            case "right":
+                if (nextRoom.doors.right.body.position.x + this.wallDepth > this.corners.topRight.x_coor) {
+                    this.roomVelocity.x_coor = -130;
+                    nextRoom.roomVelocity.x_coor = -130;
+                } else {
+                    this.stopRoom(nextRoom);
+                }
+                break;
         }
 
         for (let door in this.doors) {
-            this.doors[door].body.velocity.y = this.roomVelocity;
+            this.doors[door].body.velocity.x = this.roomVelocity.x_coor;
+            this.doors[door].body.velocity.y = this.roomVelocity.y_coor;
         }
         for (let door in nextRoom.doors) {
-            nextRoom.doors[door].body.velocity.y = nextRoom.roomVelocity;
+            nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity.x_coor;
+            nextRoom.doors[door].body.velocity.y = nextRoom.roomVelocity.y_coor;
         }
         this.walls.forEach(wall => {
-            wall.body.velocity.y = this.roomVelocity;
+            wall.body.velocity.x = this.roomVelocity.x_coor;
+            wall.body.velocity.y = this.roomVelocity.y_coor;
         });
         nextRoom.walls.forEach(wall => {
-            wall.body.velocity.y = nextRoom.roomVelocity;
-        });
-    }
-
-    this.goToLeftRoom = function(nextRoom) {
-        if (nextRoom.doors.left.body.position.x < this.corners.topLeft.x_coor) {
-            this.roomVelocity = 130;
-            nextRoom.roomVelocity = 130;
-        } else {
-            this.roomVelocity = 0;
-            nextRoom.roomVelocity = 0;
-            nextRoom.setCorners();
-            this.isFocus = false;
-            nextRoom.isFocus = true;
-        }
-
-        for (let door in this.doors) {
-            this.doors[door].body.velocity.x = this.roomVelocity;
-        }
-        for (let door in nextRoom.doors) {
-            nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity;
-        }
-        this.walls.forEach(wall => {
-            wall.body.velocity.x = this.roomVelocity;
-        });
-        nextRoom.walls.forEach(wall => {
-            wall.body.velocity.x = nextRoom.roomVelocity;
-        });
-    }
-
-    this.goToRightRoom = function(nextRoom) {
-        if (nextRoom.doors.right.body.position.x + this.wallDepth > this.corners.topRight.x_coor) {
-            this.roomVelocity = -130;
-            nextRoom.roomVelocity = -130;
-        } else {
-            this.roomVelocity = 0;
-            nextRoom.roomVelocity = 0;
-            nextRoom.setCorners();
-            this.isFocus = false;
-            nextRoom.isFocus = true;
-        }
-
-        for (let door in this.doors) {
-            this.doors[door].body.velocity.x = this.roomVelocity;
-        }
-        for (let door in nextRoom.doors) {
-            nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity;
-        }
-        this.walls.forEach(wall => {
-            wall.body.velocity.x = this.roomVelocity;
-        });
-        nextRoom.walls.forEach(wall => {
-            wall.body.velocity.x = nextRoom.roomVelocity;
+            wall.body.velocity.x = nextRoom.roomVelocity.x_coor;
+            wall.body.velocity.y = nextRoom.roomVelocity.y_coor;
         });
     }
 
@@ -251,7 +207,6 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
             wall.destroy();
         });
         this.walls = [];
-        console.log(this);
     }
 }
 
