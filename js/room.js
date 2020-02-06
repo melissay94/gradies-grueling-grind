@@ -1,3 +1,5 @@
+import Enemy from "./enemy";
+
 export default function(scene, player, color, id, x_coor, y_coor, width, height) {
 
     this.id = id;
@@ -15,6 +17,7 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
     this.player = player;
 
     this.walls = [];
+    this.enemies = [];
 
     this.connectedRooms = {
         top: null, 
@@ -105,6 +108,9 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
         this.setCorners(this.x_coor, this.y_coor);
         this.renderWalls();
         this.renderDoors();
+        if (this.enemies.length < 1) {
+            this.generateEnemies();
+        }
         this.hasRendered = true;
     }
 
@@ -207,6 +213,16 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
             wall.destroy();
         });
         this.walls = [];
+    }
+
+    this.generateEnemies = function() {
+        let randomAmount = Math.floor((Math.random() * 4 + 1));
+        for (let i = 0; i < randomAmount; i++) {
+            this.enemies.push(new Enemy(scene, i, 100 * (i+1), 100 * (i+1), 40, 40, 5));
+        }
+        for (let enemy of this.enemies) {
+            enemy.renderEnemy();
+        }
     }
 }
 
