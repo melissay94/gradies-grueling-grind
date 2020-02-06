@@ -71,7 +71,7 @@ function create() {
     // Enemies
     let enemies = this.physics.add.group();
     enemies.add(new Enemy(this, 0, 200, 200, 40, 40, 5), true);
-
+    
     this.physics.add.collider(gameState.player.playerObject, enemies);
 
 };
