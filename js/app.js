@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function preload() {
     
-    this.load.image('adventurer', Adventurer);
+    //this.load.image('adventurer', Adventurer);
 };
 
 function create() {
@@ -69,17 +69,11 @@ function create() {
     gameState.player.body.collideWorldBounds = true;
 
     // Enemies
-    let enemies = this.physics.add.group();
-    enemies.add(new Enemy(this, 0, 200, 200, 40, 40, 5), true);
     
-    this.physics.add.collider(gameState.player.playerObject, enemies);
+    //this.physics.add.collider(gameState.player.playerObject, enemies);
 
 };
 function update() {
-
-    for (let enemy of gameState.currentRoom.enemies) {
-        enemy.followPath();
-    }
 
     if (!gameState.enteredDoor.hasEntered) {
         gameState.player.movePlayer();

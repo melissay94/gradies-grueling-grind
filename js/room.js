@@ -17,7 +17,7 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
     this.player = player;
 
     this.walls = [];
-    this.enemies = [];
+    this.enemies = scene.physics.add.group();
 
     this.connectedRooms = {
         top: null, 
@@ -104,13 +104,11 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
         this.corners.bottomRight = new Coordinates(this.x_coor + this.width, this.y_coor + this.height);
     }
 
-    this.renderRoom = function(sprite) {
+    this.renderRoom = function() {
         this.setCorners(this.x_coor, this.y_coor);
         this.renderWalls();
         this.renderDoors();
-        if (this.enemies.length < 1) {
-            //this.generateEnemies(sprite);
-        }
+        this.generateEnemies();
         this.hasRendered = true;
     }
 
@@ -215,23 +213,37 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
         this.walls = [];
     }
 
-    this.generateEnemies = function(sprite) {
+    this.generateEnemies = function() {
+    
         let randomAmount = Math.floor((Math.random() * 4 + 1));
 
         for (let i = 0; i < randomAmount; i++) {
-            //this.enemies.push(new Enemy(scene, i, 0, 0, 40, 40, 5));
+            let coordinates = this.generateRandomCoordinates();
+            let newEnemy = new Enemy(scene, 0, coordinates.start.x_coor, coordinates.start.y_coor, coordinates.end.x_coor, coordinates.end.y_coor, 40, 40, 5);
+            this.enemies.add(newEnemy, true);
+            console.log(coordinates);
         }
+    }
 
+     this.generateRandomCoordinates = function() {
         let xStart = this.corners.topLeft.x_coor + this.wallDepth + 20;
-        let xEnd = this.corners.topRight.x_coor - this.wallDepth - 20;
-        let yStart = this.corners.topLeft.y_coor + this.wallDepth + 20;
-        let yEnd = this.corners.bottomLeft.y_coor - this.wallDepth - 20;
+        let xEnd = this.corners.topRight.x_coor/2;
+        let xRandom = Math.floor(Math.random() * (xEnd - xStart)) + xStart;
 
-        for (let enemy of this.enemies) {
-            //enemy.x_coor = Math.floor(Math.random() * (xEnd - xStart)) + xStart;
-            //enemy.y_coor = Math.floor(Math.random() * (yEnd - yStart)) + yStart;
-            //enemy.renderEnemy(this.player, this, sprite);
-        }
+        let xRange = this.corners.topRight.x_coor - this.wallDepth - xRandom - 20;
+        let xRangeRandom = Math.floor(Math.random() * xRange);
+    
+        let yStart = this.corners.topLeft.y_coor + this.wallDepth + 20;
+        let yEnd = this.corners.bottomLeft.y_coor/2;
+        let yRandom = Math.floor(Math.random() * (yEnd - yStart)) + yStart;
+
+        let yRange = this.corners.bottomLeft.y_coor - this.wallDepth - yRandom - 20;
+        let yRangeRandom = Math.floor(Math.random() * yRange);
+    
+        return {
+            start: new Coordinates(xRandom, yRandom), 
+            end: new Coordinates(xRandom + xRangeRandom, yRandom + yRangeRandom)
+        };
     }
 }
 
@@ -239,3 +251,4 @@ const Coordinates = function(x_coor, y_coor) {
     this.x_coor = x_coor;
     this.y_coor = y_coor;
 }
+

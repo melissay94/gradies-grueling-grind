@@ -17,17 +17,14 @@ export default new Phaser.Class({
 
     Extends: Phaser.Physics.Arcade.Sprite,
 
-    initialize: function Enemy(scene, id, x, y, w, h, health) {
-        
-        this.x = x;
-        this.y = y;
+    initialize: function Enemy(scene, id, startX, startY, endX, endY, w, h, health) {
 
-        Phaser.Physics.Arcade.Sprite.call(this, scene, x, y, 'adventurer');
+        Phaser.Physics.Arcade.Sprite.call(this, scene, startX, startY, 'adventurer');
 
-        let line1 = new Phaser.Curves.Line([x, y, x + 200, x]);
-        let line2 = new Phaser.Curves.Line([x + 200, y, x + 200, y + 100]);
-        let line3 = new Phaser.Curves.Line([x + 200, y + 100, x + 200, y]);
-        let line4 = new Phaser.Curves.Line([x + 200, x, x, y]);
+        let line1 = new Phaser.Curves.Line([startX, startY, endX, startY]);
+        let line2 = new Phaser.Curves.Line([endX, startY, endX, endY]);
+        let line3 = new Phaser.Curves.Line([endX, endY, endX, startY]);
+        let line4 = new Phaser.Curves.Line([endX, startY, startX, startY]);
 
         this.path = new Phaser.Curves.Path();
         this.path.add(line1);
