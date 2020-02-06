@@ -68,6 +68,10 @@ function create() {
 };
 function update() {
 
+    for (let enemy of gameState.currentRoom.enemies) {
+        enemy.followPath();
+    }
+
     if (!gameState.enteredDoor.hasEntered) {
         gameState.player.movePlayer();
     } else {

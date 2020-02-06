@@ -217,11 +217,19 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
 
     this.generateEnemies = function() {
         let randomAmount = Math.floor((Math.random() * 4 + 1));
+
         for (let i = 0; i < randomAmount; i++) {
-            this.enemies.push(new Enemy(scene, i, 100 * (i+this.corners.topLeft.x_coor), 100 * (i+this.corners.topLeft.y_coor), 40, 40, 5));
+            this.enemies.push(new Enemy(scene, i, 0, 0, 40, 40, 5));
         }
+
+        let xStart = this.corners.topLeft.x_coor + this.wallDepth + 20;
+        let xEnd = this.corners.topRight.x_coor - this.wallDepth - 20;
+        let yStart = this.corners.topLeft.y_coor + this.wallDepth + 20;
+        let yEnd = this.corners.bottomLeft.y_coor - this.wallDepth - 20;
+
         for (let enemy of this.enemies) {
-            console.log(this);
+            enemy.x_coor = Math.floor(Math.random() * (xEnd - xStart)) + xStart;
+            enemy.y_coor = Math.floor(Math.random() * (yEnd - yStart)) + yStart;
             enemy.renderEnemy(this.player, this);
         }
     }
