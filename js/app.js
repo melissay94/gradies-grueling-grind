@@ -59,7 +59,7 @@ function create() {
     
     gameState.player.renderPlayer(game.config.width/2, game.config.height/2);
 
-    gameState.currentRoom = new Room(this, gameState.player.playerObject, 0xFF00FF, gameState.rooms.length, 0, 0, game.config.width, game.config.height);
+    gameState.currentRoom = new Room(this, gameState.player, 0xFF00FF, gameState.rooms.length, 0, 0, game.config.width, game.config.height);
     gameState.currentRoom.renderRoom();
     gameState.currentRoom.isFocus = true;
     gameState.rooms.push(gameState.currentRoom.id);
@@ -67,11 +67,6 @@ function create() {
     overlapDoor(this);
 
     gameState.player.body.collideWorldBounds = true;
-
-    // Enemies
-    
-    //this.physics.add.collider(gameState.player.playerObject, enemies);
-
 };
 function update() {
 
@@ -128,24 +123,28 @@ function overlapUpdate(scene, direction) {
             x = gameState.currentRoom.corners.topLeft.x_coor;
             y = gameState.currentRoom.corners.topLeft.y_coor - game.config.height;
             gameState.player.body.velocity.y = gameState.player.speed;
+            gameState.player.sword.body.velocity.y = gameState.player.speed;
             break;
         case "bottom":
             gameState.enteredDoor.direction = "bottom";
             x = gameState.currentRoom.corners.bottomLeft.x_coor;
             y = gameState.currentRoom.corners.bottomLeft.y_coor;
             gameState.player.body.velocity.y = -gameState.player.speed;
+            gameState.player.sword.body.velocity.y = -gameState.player.speed;
             break;
         case "left":
             gameState.enteredDoor.direction = "left";
             x = gameState.currentRoom.corners.topLeft.x_coor - game.config.width;
             y = gameState.currentRoom.corners.topLeft.y_coor;
             gameState.player.body.velocity.x = gameState.player.speed;
+            gameState.player.sword.body.velocity.x = gameState.player.speed;
             break;
         case "right":
             gameState.enteredDoor.direction = "right";
             x = gameState.currentRoom.corners.topRight.x_coor;
             y = gameState.currentRoom.corners.topLeft.y_coor;
             gameState.player.body.velocity.x = -gameState.player.speed;
+            gameState.player.sword.body.velocity.x = -gameState.player.speed;
             break;
     }
 

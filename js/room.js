@@ -16,8 +16,8 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
     this.isFocus = false;
     this.player = player;
 
-    this.walls = [];
-    this.enemies = scene.physics.add.group();
+    this.walls = null;
+    this.enemies = null;
 
     this.connectedRooms = {
         top: null, 
@@ -42,57 +42,59 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
 
     this.renderWalls = function() {  
 
+        this.walls = scene.physics.add.group({
+            immovable: true,
+            bounceX: 1,
+            bounceY: 1
+        });
+
         // Left Top Wall
-        this.walls.push(scene.add.rectangle(
+        this.walls.add(scene.add.rectangle(
             this.corners.topLeft.x_coor + this.wallXLength/2, 
             this.corners.topLeft.y_coor + this.wallDepth/2,
             this.wallXLength, this.wallDepth, color));
 
         // Right Top Wall
-        this.walls.push(scene.add.rectangle(
+        this.walls.add(scene.add.rectangle(
             this.corners.topRight.x_coor - this.wallXLength/2, 
             this.corners.topRight.y_coor + this.wallDepth/2, 
             this.wallXLength, this.wallDepth, color));
     
         // Top Left Wall
-        this.walls.push(scene.add.rectangle(
+        this.walls.add(scene.add.rectangle(
             this.corners.topLeft.x_coor + this.wallDepth/2, 
             this.corners.topLeft.y_coor + this.wallYLength/2, 
             this.wallDepth, this.wallYLength, color));
         // Bottom Left Wall
-        this.walls.push(scene.add.rectangle(
+        this.walls.add(scene.add.rectangle(
             this.corners.bottomLeft.x_coor + this.wallDepth/2,
             this.corners.bottomLeft.y_coor - this.wallYLength/2,
             this.wallDepth, this.wallYLength, color));
     
         // Top Right Wall
-        this.walls.push(scene.add.rectangle(
+        this.walls.add(scene.add.rectangle(
             this.corners.topRight.x_coor - this.wallDepth/2,
             this.corners.topRight.y_coor + this.wallYLength/2,
             this.wallDepth, this.wallYLength, color));
 
         // Bottom Left Wall
-        this.walls.push(scene.add.rectangle(
+        this.walls.add(scene.add.rectangle(
             this.corners.bottomRight.x_coor - this.wallDepth/2,
             this.corners.bottomRight.y_coor - this.wallYLength/2,
             this.wallDepth, this.wallYLength, color));
     
         // Left Bottom Wall
-        this.walls.push(scene.add.rectangle(
+        this.walls.add(scene.add.rectangle(
             this.corners.bottomLeft.x_coor + this.wallXLength/2, 
             this.corners.bottomLeft.y_coor - this.wallDepth/2, 
             this.wallXLength, this.wallDepth, color));
         // Right Bottom Wall
-        this.walls.push(scene.add.rectangle(
+        this.walls.add(scene.add.rectangle(
             this.corners.bottomRight.x_coor - this.wallXLength/2,
             this.corners.bottomRight.y_coor - this.wallDepth/2, 
             this.wallXLength, this.wallDepth, color));
 
-        this.walls.forEach(wall => {
-            scene.physics.add.existing(wall);
-            wall.body.immovable = true;
-            scene.physics.add.collider(this.player, wall);
-        });
+        scene.physics.add.collider(this.walls, this.player.playerObject);
     }
 
     this.setCorners = function(x_coor=0, y_coor=0) {
@@ -108,7 +110,6 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
         this.setCorners(this.x_coor, this.y_coor);
         this.renderWalls();
         this.renderDoors();
-        this.generateEnemies();
         this.hasRendered = true;
     }
 
@@ -145,6 +146,9 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
         nextRoom.setCorners();
         this.isFocus = false;
         nextRoom.isFocus = true;
+        this.generateEnemies();
+        this.player.sword.body.velocity.x = 0;
+        this.player.sword.body.velocity.y = 0;
     }
 
     this.goToNextRoom = function(nextRoom, direction) {
@@ -191,14 +195,14 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
             nextRoom.doors[door].body.velocity.x = nextRoom.roomVelocity.x_coor;
             nextRoom.doors[door].body.velocity.y = nextRoom.roomVelocity.y_coor;
         }
-        this.walls.forEach(wall => {
-            wall.body.velocity.x = this.roomVelocity.x_coor;
-            wall.body.velocity.y = this.roomVelocity.y_coor;
-        });
-        nextRoom.walls.forEach(wall => {
-            wall.body.velocity.x = nextRoom.roomVelocity.x_coor;
-            wall.body.velocity.y = nextRoom.roomVelocity.y_coor;
-        });
+
+        this.walls.setVelocityX(this.roomVelocity.x_coor);
+        this.walls.setVelocityY(this.roomVelocity.y_coor);
+
+        nextRoom.walls.setVelocityX(this.roomVelocity.x_coor);
+        nextRoom.walls.setVelocityY(this.roomVelocity.y_coor);
+        
+        
     }
 
     this.destroy = function() {
@@ -207,22 +211,46 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
             this.doors[door].destroy();
             this.doors[door] = null;
         }
-        this.walls.forEach(wall => {
-            wall.destroy();
-        });
-        this.walls = [];
+        this.walls.clear();
     }
 
     this.generateEnemies = function() {
     
         let randomAmount = Math.floor((Math.random() * 4 + 1));
 
+        let group = scene.physics.add.group({
+            bounceX: 1, 
+            bounceY: 1,
+            collideWorldBounds: true
+        });
+
         for (let i = 0; i < randomAmount; i++) {
             let coordinates = this.generateRandomCoordinates();
-            let newEnemy = new Enemy(scene, 0, coordinates.start.x_coor, coordinates.start.y_coor, coordinates.end.x_coor, coordinates.end.y_coor, 40, 40, 5);
-            this.enemies.add(newEnemy, true);
-            console.log(coordinates);
+            group.create(coordinates.start.x_coor, coordinates.start.y_coor, 'adventurer').setVelocity(100, 100);
         }
+
+        scene.physics.add.collider(group, group);
+        scene.physics.add.collider(group, this.player.playerObject, () =>{
+            this.player.health -= 1;
+            document.getElementById("health").textContent = this.player.health;
+        });
+        scene.physics.add.collider(group, this.walls, function(enemy, wall) {
+            console.log('pink floyd')
+        });
+
+        this.enemies = group;
+
+        // this.enemies = scene.physics.add.group({
+        //     bounceX: 20,
+        //     bounceY: 20
+        // });
+
+        // for (let i = 0; i < randomAmount; i++) {
+        //     let coordinates = this.generateRandomCoordinates();
+        //     let newEnemy = new Enemy(scene, 0, coordinates.start.x_coor, coordinates.start.y_coor, coordinates.end.x_coor, coordinates.end.y_coor, 40, 40, 5);
+        //     this.enemies.add(newEnemy, true);
+        // }
+        // scene.physics.add.collider(this.enemies);
     }
 
      this.generateRandomCoordinates = function() {

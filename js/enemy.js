@@ -17,7 +17,7 @@ export default new Phaser.Class({
 
     Extends: Phaser.Physics.Arcade.Sprite,
 
-    initialize: function Enemy(scene, id, startX, startY, endX, endY, w, h, health) {
+    initialize: function Enemy(scene, startX, startY, endX, endY) {
 
         Phaser.Physics.Arcade.Sprite.call(this, scene, startX, startY, 'adventurer');
 
