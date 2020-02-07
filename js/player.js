@@ -24,7 +24,7 @@ export default function(scene) {
     };
 
     this.renderPlayer = function(x_coor, y_coor) {
-        this.playerObject = scene.add.rectangle(x_coor, y_coor, 50, 50, 0xFFFFFF);
+        this.playerObject = scene.add.sprite(x_coor, y_coor, 'gradie');
         scene.physics.add.existing(this.playerObject);
         this.body = this.playerObject.body;
         this.body.setBounce(1);
@@ -82,7 +82,7 @@ export default function(scene) {
 
     this.indicateDirection = function() {
         if (this.sword == null) {
-            this.sword = scene.add.rectangle(0, 0, 5, 5, 0xFF0000);
+            this.sword = scene.add.sprite(0, 0, 'sword');
             scene.physics.add.existing(this.sword);
         }
 
