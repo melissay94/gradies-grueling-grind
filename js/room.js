@@ -52,50 +52,51 @@ export default function(scene, player, id, x_coor, y_coor, width, height) {
         });
 
         // Left Top Wall
-        this.walls.add(scene.add.rectangle(
+        this.walls.add(scene.add.sprite(
             this.corners.topLeft.x_coor + this.wallXLength/2, 
             this.corners.topLeft.y_coor + this.wallDepth/2,
-            this.wallXLength, this.wallDepth, randomColor));
+            'top_wall'));
 
         // Right Top Wall
-        this.walls.add(scene.add.rectangle(
+        this.walls.add(scene.add.sprite(
             this.corners.topRight.x_coor - this.wallXLength/2, 
             this.corners.topRight.y_coor + this.wallDepth/2, 
-            this.wallXLength, this.wallDepth, randomColor));
+            'top_wall'));
     
         // Top Left Wall
-        this.walls.add(scene.add.rectangle(
+        this.walls.add(scene.add.sprite(
             this.corners.topLeft.x_coor + this.wallDepth/2, 
             this.corners.topLeft.y_coor + this.wallYLength/2, 
-            this.wallDepth, this.wallYLength, randomColor));
+            'left_wall'));
         // Bottom Left Wall
-        this.walls.add(scene.add.rectangle(
+        this.walls.add(scene.add.sprite(
             this.corners.bottomLeft.x_coor + this.wallDepth/2,
             this.corners.bottomLeft.y_coor - this.wallYLength/2,
-            this.wallDepth, this.wallYLength, randomColor));
+            'left_wall'));
     
         // Top Right Wall
-        this.walls.add(scene.add.rectangle(
+        this.walls.add(scene.add.sprite(
             this.corners.topRight.x_coor - this.wallDepth/2,
             this.corners.topRight.y_coor + this.wallYLength/2,
-            this.wallDepth, this.wallYLength, randomColor));
+            'right_wall'));
 
-        // Bottom Left Wall
-        this.walls.add(scene.add.rectangle(
+        // Bottom Right Wall
+        this.walls.add(scene.add.sprite(
             this.corners.bottomRight.x_coor - this.wallDepth/2,
             this.corners.bottomRight.y_coor - this.wallYLength/2,
-            this.wallDepth, this.wallYLength, randomColor));
+            'right_wall'));
     
         // Left Bottom Wall
-        this.walls.add(scene.add.rectangle(
+        this.walls.add(scene.add.sprite(
             this.corners.bottomLeft.x_coor + this.wallXLength/2, 
             this.corners.bottomLeft.y_coor - this.wallDepth/2, 
-            this.wallXLength, this.wallDepth, randomColor));
+            'bottom_wall'));
+
         // Right Bottom Wall
-        this.walls.add(scene.add.rectangle(
+        this.walls.add(scene.add.sprite(
             this.corners.bottomRight.x_coor - this.wallXLength/2,
             this.corners.bottomRight.y_coor - this.wallDepth/2, 
-            this.wallXLength, this.wallDepth, randomColor));
+            'bottom_wall'));
 
         scene.physics.add.collider(this.walls, this.player.playerObject);
     }
@@ -118,25 +119,25 @@ export default function(scene, player, id, x_coor, y_coor, width, height) {
 
     this.renderDoors = function() {
 
-        this.doors.top = scene.add.rectangle(
+        this.doors.top = scene.add.sprite(
             this.corners.topLeft.x_coor + this.width/2, 
             this.corners.topLeft.y_coor + this.wallDepth/2, 
-            this.doorLength, this.wallDepth, 0xFFFFFF);
+            'doorTop');
 
-        this.doors.bottom = scene.add.rectangle(
+        this.doors.bottom = scene.add.sprite(
             this.corners.bottomLeft.x_coor + this.width/2, 
             this.corners.bottomLeft.y_coor - this.wallDepth/2, 
-            this.doorLength, this.wallDepth, 0xFFFFFF);
+            'doorBottom');
 
-        this.doors.left = scene.add.rectangle(
+        this.doors.left = scene.add.sprite(
             this.corners.topLeft.x_coor + this.wallDepth/2, 
             this.corners.topLeft.y_coor + this.height/2, 
-            this.wallDepth, this.doorLength, 0xFFFFFF);
+            'doorLeft');
 
-        this.doors.right = scene.add.rectangle(
+        this.doors.right = scene.add.sprite(
             this.corners.bottomRight.x_coor - this.wallDepth/2, 
             this.corners.bottomRight.y_coor - this.height/2, 
-            this.wallDepth, this.doorLength, 0xFFFFFF);
+            'doorRight');
 
         for (let door in this.doors) {
             scene.physics.add.existing(this.doors[door]);

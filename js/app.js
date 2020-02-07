@@ -4,7 +4,19 @@ import Phaser from "phaser";
 import Room from "./room.js";
 import Player from "./player.js";
 import Clock from "./clock.js";
-import Adventurer from "../assets/adventurer.png";
+import Adventurer from "../assets/ghosts.png";
+import Gradie from "../assets/gradie.png";
+import Sword from "../assets/sword.png";
+import TopWall from "../assets/top_wall.png";
+import LeftWall from "../assets/left_wall.png";
+import BottomWall from "../assets/bottom_wall.png";
+import RightWall from "../assets/right_wall.png";
+import DoorTop from "../assets/doorway.png";
+import DoorRight from "../assets/doorway_right.png";
+import DoorLeft from "../assets/doorway_left.png";
+import DoorBottom from "../assets/doorway_down.png";
+import Floor from "../assets/cave_floor.jpg";
+
 
 const gameState = {};
 gameState.rooms = [];
@@ -39,7 +51,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function preload() {
     
-    //this.load.image('adventurer', Adventurer);
+    this.load.image('adventurer', Adventurer);
+    this.load.image('gradie', Gradie);
+    this.load.image('sword', Sword);
+    this.load.image('top_wall', TopWall);
+    this.load.image('left_wall', LeftWall);
+    this.load.image('bottom_wall', BottomWall);
+    this.load.image('right_wall', RightWall);
+    this.load.image('floor', Floor);
+    this.load.image('doorTop', DoorTop);
+    this.load.image('doorRight', DoorRight);
+    this.load.image('doorLeft', DoorLeft);
+    this.load.image('doorBottom', DoorBottom);
+
     document.getElementById("reset").style.display = "none";
     const timeElement = new Clock();
     interval = setInterval(() => {
@@ -48,6 +72,8 @@ function preload() {
 };
 
 function create() {
+
+    this.add.image(300, 200, 'floor');
 
     gameState.enteredDoor = {
         direction: null,
