@@ -152,6 +152,10 @@ export default function(scene, player, id, x_coor, y_coor, width, height) {
         this.generateEnemies();
         this.player.sword.body.velocity.x = 0;
         this.player.sword.body.velocity.y = 0;
+
+        scene.physics.add.overlap(this.enemies, this.player.sword, (sword, enemy) => {
+            enemy.destroy();
+        });
     }
 
     this.goToNextRoom = function(nextRoom, direction) {
@@ -242,18 +246,6 @@ export default function(scene, player, id, x_coor, y_coor, width, height) {
         });
 
         this.enemies = group;
-
-        // this.enemies = scene.physics.add.group({
-        //     bounceX: 20,
-        //     bounceY: 20
-        // });
-
-        // for (let i = 0; i < randomAmount; i++) {
-        //     let coordinates = this.generateRandomCoordinates();
-        //     let newEnemy = new Enemy(scene, 0, coordinates.start.x_coor, coordinates.start.y_coor, coordinates.end.x_coor, coordinates.end.y_coor, 40, 40, 5);
-        //     this.enemies.add(newEnemy, true);
-        // }
-        // scene.physics.add.collider(this.enemies);
     }
 
      this.generateRandomCoordinates = function() {
