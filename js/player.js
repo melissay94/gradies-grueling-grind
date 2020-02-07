@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 
 export default function(scene) {
-    this.health = 100;
+    this.health = 10;
     this.speed = 100;
     this.attack = 5;
     this.controls = null;

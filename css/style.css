@@ -31,3 +31,7 @@ h1 {
 .player-bar span {
     color:#898c27;
 }
+
+#reset {
+    display: none;
+}

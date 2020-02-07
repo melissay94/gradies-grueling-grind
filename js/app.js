@@ -4,13 +4,13 @@ import Phaser from "phaser";
 import Room from "./room.js";
 import Player from "./player.js";
 import Clock from "./clock.js";
-import Enemy from "./enemy.js";
 import Adventurer from "../assets/adventurer.png";
 
 const gameState = {};
 gameState.rooms = [];
 
 let game = null;
+let interval = null;
 
 const phaserConfig = {
     type: Phaser.CANVAS,
@@ -34,16 +34,17 @@ const phaserConfig = {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    const timeElement = new Clock();
-    let interval = setInterval(() => {
-        timeElement.setTime();
-    }, timeElement.interval);
     game = new Phaser.Game(phaserConfig);
 });
 
 function preload() {
     
     //this.load.image('adventurer', Adventurer);
+    document.getElementById("reset").style.display = "none";
+    const timeElement = new Clock();
+    interval = setInterval(() => {
+        timeElement.setTime();
+    }, timeElement.interval);
 };
 
 function create() {
@@ -54,6 +55,7 @@ function create() {
     };
     
     gameState.player = new Player(this);
+    document.getElementById("health").textContent = gameState.player.health;
 
     gameState.controls = gameState.player.initializePlayerControls();   
     
@@ -88,6 +90,16 @@ function update() {
                 resetRooms(this, gameState.currentRoom.corners.topLeft.x_coor - game.config.width, gameState.currentRoom.corners.topLeft.y_coor);
                 break;
         }
+    }
+
+    if (gameState.player.health <= 0) {
+        this.scene.pause();
+        document.getElementById("reset").style.display = "initial";
+
+        document.getElementById("reset").addEventListener("click", () => {
+            this.scene.restart();
+            clearInterval(interval);
+        });
     }
 };
 
