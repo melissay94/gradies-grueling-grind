@@ -14,6 +14,9 @@ This is going to be a top down 2D rouge-like dungeon crawler! The game will star
 * Bootstrap for page styling
 * Phaser 3 for game logic.
 
+## Sprites Created
+![Sprites](/assets/sprites.png)
+
 ## MVP Checklist
 * Render the starting area **Completed**
 * Render a random room when a player goes through a door **Completed**
@@ -39,6 +42,16 @@ This is going to be a top down 2D rouge-like dungeon crawler! The game will star
 * Sometimes your sword just flys away. This probably has to do with how I'm implementing the sword start and stop for it's movement, but right now if you go fast enough it starts going all around the room.
 * You cannot move and stab at the same time. Like London Tipton chewing gum. Again, probably has to do with my implementation of the sword movement but it likes to stay sheathed when you're running.
 * The code structure is kind of bonkers, and I would like to clean it up and refactor it to be more expandable. Right now it's very tightly coupled.
+
+## Images of Game Play
+Spawning into the start area
+![Start Area](/assets/starting_area.png)
+
+Moving to a new room
+![switching rooms](/assets/switching_rooms.PNG)
+
+Ghosts Spawning
+![ghosties](/assets/ghosties_spawn.PNG)
 
 ## Game Planning and Implementation
 
