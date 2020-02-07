@@ -1,6 +1,6 @@
 import Enemy from "./enemy";
 
-export default function(scene, player, color, id, x_coor, y_coor, width, height) {
+export default function(scene, player, id, x_coor, y_coor, width, height) {
 
     this.id = id;
     this.width = width;
@@ -15,6 +15,7 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
     this.hasRendered = false;
     this.isFocus = false;
     this.player = player;
+    this.colors = [0xFF00FF, 0xFFFF00, 0x00FFFF, 0x0000FF];
 
     this.walls = null;
     this.enemies = null;
@@ -42,6 +43,8 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
 
     this.renderWalls = function() {  
 
+        let randomColor = this.colors[Math.floor(Math.random() * this.colors.length)];
+
         this.walls = scene.physics.add.group({
             immovable: true,
             bounceX: 1,
@@ -52,47 +55,47 @@ export default function(scene, player, color, id, x_coor, y_coor, width, height)
         this.walls.add(scene.add.rectangle(
             this.corners.topLeft.x_coor + this.wallXLength/2, 
             this.corners.topLeft.y_coor + this.wallDepth/2,
-            this.wallXLength, this.wallDepth, color));
+            this.wallXLength, this.wallDepth, randomColor));
 
         // Right Top Wall
         this.walls.add(scene.add.rectangle(
             this.corners.topRight.x_coor - this.wallXLength/2, 
             this.corners.topRight.y_coor + this.wallDepth/2, 
-            this.wallXLength, this.wallDepth, color));
+            this.wallXLength, this.wallDepth, randomColor));
     
         // Top Left Wall
         this.walls.add(scene.add.rectangle(
             this.corners.topLeft.x_coor + this.wallDepth/2, 
             this.corners.topLeft.y_coor + this.wallYLength/2, 
-            this.wallDepth, this.wallYLength, color));
+            this.wallDepth, this.wallYLength, randomColor));
         // Bottom Left Wall
         this.walls.add(scene.add.rectangle(
             this.corners.bottomLeft.x_coor + this.wallDepth/2,
             this.corners.bottomLeft.y_coor - this.wallYLength/2,
-            this.wallDepth, this.wallYLength, color));
+            this.wallDepth, this.wallYLength, randomColor));
     
         // Top Right Wall
         this.walls.add(scene.add.rectangle(
             this.corners.topRight.x_coor - this.wallDepth/2,
             this.corners.topRight.y_coor + this.wallYLength/2,
-            this.wallDepth, this.wallYLength, color));
+            this.wallDepth, this.wallYLength, randomColor));
 
         // Bottom Left Wall
         this.walls.add(scene.add.rectangle(
             this.corners.bottomRight.x_coor - this.wallDepth/2,
             this.corners.bottomRight.y_coor - this.wallYLength/2,
-            this.wallDepth, this.wallYLength, color));
+            this.wallDepth, this.wallYLength, randomColor));
     
         // Left Bottom Wall
         this.walls.add(scene.add.rectangle(
             this.corners.bottomLeft.x_coor + this.wallXLength/2, 
             this.corners.bottomLeft.y_coor - this.wallDepth/2, 
-            this.wallXLength, this.wallDepth, color));
+            this.wallXLength, this.wallDepth, randomColor));
         // Right Bottom Wall
         this.walls.add(scene.add.rectangle(
             this.corners.bottomRight.x_coor - this.wallXLength/2,
             this.corners.bottomRight.y_coor - this.wallDepth/2, 
-            this.wallXLength, this.wallDepth, color));
+            this.wallXLength, this.wallDepth, randomColor));
 
         scene.physics.add.collider(this.walls, this.player.playerObject);
     }

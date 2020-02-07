@@ -61,7 +61,7 @@ function create() {
     
     gameState.player.renderPlayer(game.config.width/2, game.config.height/2);
 
-    gameState.currentRoom = new Room(this, gameState.player, 0xFF00FF, gameState.rooms.length, 0, 0, game.config.width, game.config.height);
+    gameState.currentRoom = new Room(this, gameState.player, gameState.rooms.length, 0, 0, game.config.width, game.config.height);
     gameState.currentRoom.renderRoom();
     gameState.currentRoom.isFocus = true;
     gameState.rooms.push(gameState.currentRoom.id);
@@ -161,7 +161,7 @@ function overlapUpdate(scene, direction) {
     }
 
     if (gameState.currentRoom.connectedRooms[direction] == null) {
-        gameState.nextRoom = new Room(scene, gameState.player, 0x00FFFF, gameState.rooms.length, x, y, game.config.width, game.config.height);
+        gameState.nextRoom = new Room(scene, gameState.player, gameState.rooms.length, x, y, game.config.width, game.config.height);
         gameState.rooms.push(gameState.nextRoom.id);
         gameState.currentRoom.connectedRooms[direction] = gameState.nextRoom;
         let opposite = null;
