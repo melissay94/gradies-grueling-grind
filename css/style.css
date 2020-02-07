@@ -10,6 +10,10 @@ h1 {
     color: #898c27;
 }
 
+code {
+    color: #222326;
+}
+
 .lead {
     color: #222326;
     font-weight: 600;
@@ -18,7 +22,7 @@ h1 {
 }
 
 .container-fluid {
-    width: 95%;
+    width: 75%;
 }
 
 .player-bar {
@@ -32,6 +36,15 @@ h1 {
     color:#898c27;
 }
 
+.instructions {
+    margin-top: 35px;
+    font-size: 18px;
+}
+
 #reset {
     display: none;
+    background-color: #898c27;
+    color: white;
+    margin-top: 25px;
 }
+
