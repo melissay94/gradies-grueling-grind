@@ -39,6 +39,7 @@ code {
 .instructions {
     margin-top: 35px;
     font-size: 18px;
+    text-align: center;
 }
 
 #reset {

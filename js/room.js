@@ -234,7 +234,7 @@ export default function(scene, player, id, x_coor, y_coor, width, height) {
 
         for (let i = 0; i < randomAmount; i++) {
             let coordinates = this.generateRandomCoordinates();
-            group.create(coordinates.start.x_coor, coordinates.start.y_coor, 'adventurer').setVelocity(100, 100);
+            group.create(coordinates.start.x_coor, coordinates.start.y_coor, 'adventurer').setVelocity(80, 70);
         }
 
         scene.physics.add.collider(group, group);
