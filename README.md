@@ -5,7 +5,7 @@ Those damn adventurers! They've chased you, a defenseless Kobold, deep into this
 This is going to be a top down 2D rouge-like dungeon crawler! The game will start in a safe area, but after that all other rooms will have some sort of danger in it that you can combat or attempt to run away from. The game will have permanent death, where the player has to start over completely every time they die. Eventually you may run into your tribe and then the game will be over.
 
 ## The Wireframes
-![Wireframes](./assets/wireframe.png)
+![Wireframes](/assets/wireframe.PNG)
 
 
 ## Tech Being Used
@@ -15,22 +15,30 @@ This is going to be a top down 2D rouge-like dungeon crawler! The game will star
 * Phaser 3 for game logic.
 
 ## MVP Checklist
-* Render the starting area
-* Render a random room when a player goes through a door
-* Render enemies within a room
-* Have player able to attack enemies
-* Have enemies able to attack players
-* Track a health bar for the player
-* Have an end state once a player's health is 0.
-* Keep track of how long the player stays alive. - Counter, clock, how many enemies killed, etc.
+* Render the starting area **Completed**
+* Render a random room when a player goes through a door **Completed**
+* Render enemies within a room **Completed**
+* Have player able to attack enemies **Completed**
+* Have enemies able to attack players **Completed**
+* Track a health bar for the player **Completed**
+* Have an end state once a player's health is 0. **Completed**
+* Keep track of how long the player stays alive. - Counter, clock, how many enemies killed, etc. **Completed**
 
 ## Stretch Goals
+* While the map does now stretch forever, you can't loop back to previous rooms, only follow the already discovered path back to them. At some point, I want to change the logic for saving rooms to a resizing array that will be able to check for previous rooms on all sides, not just where it originated from.
+* Add some beautiful artwork for the sprites
 * Have different types of attack for players (ie stab, range, magic)
 * Have different types of enemies that have different level of difficulties
 * Have items that help the player (Health potions, armor, magical items(?))
 * Have doors that you can't just walk through. (Need a key, or a magical item, or to defeat all monsters in the room)
 * Having a winning state where you find the tribe and made it through the caves.
 
+## Issues and Bugs
+* Enemies follow you from one room to the next - Even when I told them to destroy themselves in the stopRoom function, it would lead to different issues down the line that I haven't figureed out yet.
+* Enemies will not collide with walls. I'm not getting any errors for it, and they collide with everything else, but for some reason they complete ignore the walls. The player can collide with the walls, and the enemies collide with the player so that's really stumping me.
+* Sometimes your sword just flys away. This probably has to do with how I'm implementing the sword start and stop for it's movement, but right now if you go fast enough it starts going all around the room.
+* You cannot move and stab at the same time. Like London Tipton chewing gum. Again, probably has to do with my implementation of the sword movement but it likes to stay sheathed when you're running.
+* The code structure is kind of bonkers, and I would like to clean it up and refactor it to be more expandable. Right now it's very tightly coupled.
 
 ## Game Planning and Implementation
 
