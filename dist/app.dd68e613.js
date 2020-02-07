@@ -2716,30 +2716,30 @@ var e=arguments[3];require("./polyfills");var r=require("./const"),i=require("./
 },{"phaser":"sH5B"}],"tZqg":[function(require,module,exports) {
 "use strict";function t(t){this.count=0,this.interval=1e3,this.setTime=function(){this.count++;var t=this.count%60,o=t<10?"0"+t:t.toString(),e=Math.floor(this.count%3600/60),n=e<10?"0"+e:e.toString(),i=Math.floor(this.count/43200).toString();document.getElementById("time").textContent="".concat(i,":").concat(n,":").concat(o)}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=t;
 },{}],"dlUf":[function(require,module,exports) {
-module.exports="/ghosts.b605bb26.png";
+module.exports="ghosts.b605bb26.png";
 },{}],"tSEo":[function(require,module,exports) {
-module.exports="/gradie.f00b4a23.png";
+module.exports="gradie.f00b4a23.png";
 },{}],"WuQ6":[function(require,module,exports) {
-module.exports="/sword.6393a77b.png";
+module.exports="sword.6393a77b.png";
 },{}],"ML6x":[function(require,module,exports) {
-module.exports="/top_wall.23a635c9.png";
+module.exports="top_wall.23a635c9.png";
 },{}],"bdnp":[function(require,module,exports) {
-module.exports="/left_wall.7426361e.png";
+module.exports="left_wall.7426361e.png";
 },{}],"hAmH":[function(require,module,exports) {
-module.exports="/bottom_wall.6aeb125b.png";
+module.exports="bottom_wall.6aeb125b.png";
 },{}],"LeC9":[function(require,module,exports) {
-module.exports="/right_wall.5cf350bc.png";
+module.exports="right_wall.5cf350bc.png";
 },{}],"XgEY":[function(require,module,exports) {
-module.exports="/doorway.158c13b3.png";
+module.exports="doorway.158c13b3.png";
 },{}],"qIrG":[function(require,module,exports) {
-module.exports="/doorway_right.77c20ba8.png";
+module.exports="doorway_right.77c20ba8.png";
 },{}],"W5eG":[function(require,module,exports) {
-module.exports="/doorway_left.f65c2e66.png";
+module.exports="doorway_left.f65c2e66.png";
 },{}],"Douj":[function(require,module,exports) {
-module.exports="/doorway_down.df683a61.png";
+module.exports="doorway_down.df683a61.png";
 },{}],"hoMq":[function(require,module,exports) {
-module.exports="/cave_floor.28ea154f.jpg";
+module.exports="cave_floor.28ea154f.jpg";
 },{}],"QdeU":[function(require,module,exports) {
 "use strict";var e=f(require("phaser")),o=f(require("./room.js")),r=f(require("./player.js")),t=f(require("./clock.js")),n=f(require("../assets/ghosts.png")),a=f(require("../assets/gradie.png")),s=f(require("../assets/sword.png")),i=f(require("../assets/top_wall.png")),c=f(require("../assets/left_wall.png")),l=f(require("../assets/bottom_wall.png")),d=f(require("../assets/right_wall.png")),u=f(require("../assets/doorway.png")),m=f(require("../assets/doorway_right.png")),p=f(require("../assets/doorway_left.png")),y=f(require("../assets/doorway_down.png")),h=f(require("../assets/cave_floor.jpg"));function f(e){return e&&e.__esModule?e:{default:e}}var g={rooms:[]},R=null,w=null,b={type:e.default.CANVAS,width:600,height:400,backgroundColor:"#222222",parent:"gradie-window",title:"Gradie's Grueling Grind",version:"0.0.1",physics:{default:"arcade",arcade:{}},scene:{preload:_,create:v,update:x},fps:30};function _(){this.load.image("adventurer",n.default),this.load.image("gradie",a.default),this.load.image("sword",s.default),this.load.image("top_wall",i.default),this.load.image("left_wall",c.default),this.load.image("bottom_wall",l.default),this.load.image("right_wall",d.default),this.load.image("floor",h.default),this.load.image("doorTop",u.default),this.load.image("doorRight",m.default),this.load.image("doorLeft",p.default),this.load.image("doorBottom",y.default),document.getElementById("reset").style.display="none";var e=new t.default;w=setInterval(function(){e.setTime()},e.interval)}function v(){this.add.image(300,200,"floor"),g.enteredDoor={direction:null,hasEntered:!1},g.player=new r.default(this),document.getElementById("health").textContent=g.player.health,g.controls=g.player.initializePlayerControls(),g.player.renderPlayer(R.config.width/2,R.config.height/2),g.currentRoom=new o.default(this,g.player,g.rooms.length,0,0,R.config.width,R.config.height),g.currentRoom.renderRoom(),g.currentRoom.isFocus=!0,g.rooms.push(g.currentRoom.id),q(this),g.player.body.collideWorldBounds=!0}function x(){var e=this;if(g.enteredDoor.hasEntered)switch(g.currentRoom.goToNextRoom(g.nextRoom,g.enteredDoor.direction),g.enteredDoor.direction){case"top":L(this,g.currentRoom.corners.bottomLeft.x_coor,g.currentRoom.corners.bottomLeft.y_coor);break;case"bottom":L(this,g.currentRoom.corners.topLeft.x_coor,g.currentRoom.corners.topLeft.y_coor-R.config.height);break;case"left":L(this,g.currentRoom.corners.topRight.x_coor,g.currentRoom.corners.topLeft.y_coor);break;case"right":L(this,g.currentRoom.corners.topLeft.x_coor-R.config.width,g.currentRoom.corners.topLeft.y_coor)}else g.player.movePlayer();g.player.health<=0&&(this.scene.pause(),document.getElementById("reset").style.display="initial",document.getElementById("reset").addEventListener("click",function(){e.scene.restart(),clearInterval(w)}))}function L(e,o,r){g.nextRoom.isFocus&&(g.enteredDoor.hasEntered=!1,g.enteredDoor.direction=null,g.currentRoom.destroy(),g.currentRoom.hasRendered=!1,g.currentRoom.setCorners(o,r),g.currentRoom=g.nextRoom,q(e))}function q(e){var o=function(o){e.physics.add.overlap(g.player,g.currentRoom.doors[o],function(){k(e,o)})};for(var r in g.currentRoom.doors)o(r)}function k(e,r){g.enteredDoor.hasEntered=!0;var t=null,n=null;switch(r){case"top":g.enteredDoor.direction="top",t=g.currentRoom.corners.topLeft.x_coor,n=g.currentRoom.corners.topLeft.y_coor-R.config.height,g.player.body.velocity.y=g.player.speed,g.player.sword.body.velocity.y=g.player.speed;break;case"bottom":g.enteredDoor.direction="bottom",t=g.currentRoom.corners.bottomLeft.x_coor,n=g.currentRoom.corners.bottomLeft.y_coor,g.player.body.velocity.y=-g.player.speed,g.player.sword.body.velocity.y=-g.player.speed;break;case"left":g.enteredDoor.direction="left",t=g.currentRoom.corners.topLeft.x_coor-R.config.width,n=g.currentRoom.corners.topLeft.y_coor,g.player.body.velocity.x=g.player.speed,g.player.sword.body.velocity.x=g.player.speed;break;case"right":g.enteredDoor.direction="right",t=g.currentRoom.corners.topRight.x_coor,n=g.currentRoom.corners.topLeft.y_coor,g.player.body.velocity.x=-g.player.speed,g.player.sword.body.velocity.x=-g.player.speed}if(null==g.currentRoom.connectedRooms[r]){g.nextRoom=new o.default(e,g.player,g.rooms.length,t,n,R.config.width,R.config.height),g.rooms.push(g.nextRoom.id),g.currentRoom.connectedRooms[r]=g.nextRoom;var a=null;switch(r){case"top":a="bottom";break;case"bottom":a="top";break;case"left":a="right";break;case"right":a="left"}g.nextRoom.connectedRooms[a]=g.currentRoom}else g.nextRoom=g.currentRoom.connectedRooms[r];!1===g.nextRoom.hasRendered&&g.nextRoom.renderRoom()}document.addEventListener("DOMContentLoaded",function(){R=new e.default.Game(b)});
 },{"phaser":"sH5B","./room.js":"YXF9","./player.js":"eDsD","./clock.js":"tZqg","../assets/ghosts.png":"dlUf","../assets/gradie.png":"tSEo","../assets/sword.png":"WuQ6","../assets/top_wall.png":"ML6x","../assets/left_wall.png":"bdnp","../assets/bottom_wall.png":"hAmH","../assets/right_wall.png":"LeC9","../assets/doorway.png":"XgEY","../assets/doorway_right.png":"qIrG","../assets/doorway_left.png":"W5eG","../assets/doorway_down.png":"Douj","../assets/cave_floor.jpg":"hoMq"}]},{},["QdeU"], null)
-//# sourceMappingURL=/app.dd68e613.js.map
+//# sourceMappingURL=app.dd68e613.js.map
