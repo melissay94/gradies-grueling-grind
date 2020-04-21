@@ -1,4 +1,3 @@
-import Enemy from "./enemy";
 
 export default function(scene, player, id, x_coor, y_coor, width, height) {
 
@@ -43,60 +42,34 @@ export default function(scene, player, id, x_coor, y_coor, width, height) {
 
     this.renderWalls = function() {  
 
-        let randomColor = this.colors[Math.floor(Math.random() * this.colors.length)];
-
         this.walls = scene.physics.add.group({
             immovable: true,
             bounceX: 1,
             bounceY: 1
         });
 
-        // Left Top Wall
+        // Top Left Corner
         this.walls.add(scene.add.sprite(
             this.corners.topLeft.x_coor + this.wallXLength/2, 
-            this.corners.topLeft.y_coor + this.wallDepth/2,
-            'top_wall'));
+            this.corners.topLeft.y_coor + this.wallYLength/2,
+            'top_left_corner'));
 
-        // Right Top Wall
+        // Top Right Corner
         this.walls.add(scene.add.sprite(
             this.corners.topRight.x_coor - this.wallXLength/2, 
-            this.corners.topRight.y_coor + this.wallDepth/2, 
-            'top_wall'));
+            this.corners.topRight.y_coor + this.wallYLength/2, 
+            'top_right_corner'));
     
-        // Top Left Wall
+        // Bottom Left Corner
         this.walls.add(scene.add.sprite(
-            this.corners.topLeft.x_coor + this.wallDepth/2, 
-            this.corners.topLeft.y_coor + this.wallYLength/2, 
-            'left_wall'));
+            this.corners.topLeft.x_coor + this.wallXLength/2, 
+            this.corners.bottomLeft.y_coor - this.wallYLength/2, 
+            'bottom_left_corner'));
         // Bottom Left Wall
         this.walls.add(scene.add.sprite(
-            this.corners.bottomLeft.x_coor + this.wallDepth/2,
-            this.corners.bottomLeft.y_coor - this.wallYLength/2,
-            'left_wall'));
-    
-        // Top Right Wall
-        this.walls.add(scene.add.sprite(
-            this.corners.topRight.x_coor - this.wallDepth/2,
-            this.corners.topRight.y_coor + this.wallYLength/2,
-            'right_wall'));
-
-        // Bottom Right Wall
-        this.walls.add(scene.add.sprite(
-            this.corners.bottomRight.x_coor - this.wallDepth/2,
+            this.corners.topRight.x_coor - this.wallXLength/2,
             this.corners.bottomRight.y_coor - this.wallYLength/2,
-            'right_wall'));
-    
-        // Left Bottom Wall
-        this.walls.add(scene.add.sprite(
-            this.corners.bottomLeft.x_coor + this.wallXLength/2, 
-            this.corners.bottomLeft.y_coor - this.wallDepth/2, 
-            'bottom_wall'));
-
-        // Right Bottom Wall
-        this.walls.add(scene.add.sprite(
-            this.corners.bottomRight.x_coor - this.wallXLength/2,
-            this.corners.bottomRight.y_coor - this.wallDepth/2, 
-            'bottom_wall'));
+            'bottom_right_corner'));
 
         scene.physics.add.collider(this.walls, this.player.playerObject);
     }

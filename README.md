@@ -1,13 +1,20 @@
 # Gradie's Grueling Grind
 Those damn adventurers! They've chased you, a defenseless Kobold, deep into this cave system and away from the rest of your tribe. Now you have to figure your way home though you feel hopelessly lost. Explore the cave and deal with the adventurers along the way in order to get back to the other Kobolds!
 
-***Here's a link**[Gradie's Grueling Grind](https://melissay94.github.io/gradies-grueling-grind/)
+[Gradie's Grueling Grind Live Demo](https://melissay94.github.io/gradies-grueling-grind/)
+
+## Setting up Project
++ clone or download
++ run `npm install`
++ NOTE: This requires that you have the parcel CLI installed
++ run `parcel index.html`
++ Happy Gaming!
 
 ## About the Game
 This is going to be a top down 2D rouge-like dungeon crawler! The game will start in a safe area, but after that all other rooms will have some sort of danger in it that you can combat or attempt to run away from. The game will have permanent death, where the player has to start over completely every time they die. Eventually you may run into your tribe and then the game will be over.
 
 ## The Wireframes
-![Wireframes](/assets/wireframe.PNG)
+![Wireframes](/assets/wireframe.png)
 
 
 ## Tech Being Used
@@ -52,10 +59,10 @@ Spawning into the start area
 ![Start Area](/assets/starting_area.png)
 
 Moving to a new room
-![switching rooms](/assets/switching_rooms.PNG)
+![switching rooms](/assets/switching_rooms.png)
 
 Ghosts Spawning
-![ghosties](/assets/ghosties_spawn.PNG)
+![ghosties](/assets/ghosties_spawn.png)
 
 ## Game Planning and Implementation
 
