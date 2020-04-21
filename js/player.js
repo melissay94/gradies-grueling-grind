@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 
 export default function(scene) {
-    this.health = 10;
+    this.health = 15;
     this.speed = 100;
     this.attack = 5;
     this.controls = null;
@@ -38,24 +38,28 @@ export default function(scene) {
 
         if (this.controls.sKey.isDown) {
             this.body.velocity.y = this.speed;
+            this.playerObject.angle = 0;
             this.direction = "bottom";
 
             this.indicateDirection();
         }
         if (this.controls.wKey.isDown) {
             this.body.velocity.y = -this.speed;
+            this.playerObject.angle = 180;
             this.direction = "top";
 
             this.indicateDirection();
         }
         if (this.controls.dKey.isDown) {
             this.body.velocity.x = this.speed;
+            this.playerObject.angle = 270;
             this.direction = "right";
 
             this.indicateDirection();
         }
         if (this.controls.aKey.isDown) {
             this.body.velocity.x = -this.speed;
+            this.playerObject.angle = 90;
             this.direction = "left";
 
             this.indicateDirection();
@@ -88,28 +92,24 @@ export default function(scene) {
 
         switch(this.direction) {
             case "top":
-                this.sword.x = this.body.position.x + 25;
-                this.sword.y = this.body.position.y;
-                this.sword.width = 5;
-                this.sword.height = this.swordLength;
-                break;
-            case "bottom":
-                this.sword.x = this.body.position.x + 25;
-                this.sword.y = this.body.position.y + 25;
-                this.sword.width = 5;
-                this.sword.height = this.swordLength;
-                break;
-            case "left":
                 this.sword.x = this.body.position.x;
                 this.sword.y = this.body.position.y + 25;
-                this.sword.height = 5;
-                this.sword.width = this.swordLength;
+                this.sword.angle = 0;
+                break;
+            case "bottom":
+                this.sword.x = this.body.position.x + 50;
+                this.sword.y = this.body.position.y + 25;
+                this.sword.angle = 180;
+                break;
+            case "left":
+                this.sword.x = this.body.position.x + 25;
+                this.sword.y = this.body.position.y + 50;
+                this.sword.angle = 270;
                 break;
             case "right":
                 this.sword.x = this.body.position.x + 25;
-                this.sword.y = this.body.position.y + 25;
-                this.sword.height = 5;
-                this.sword.width = this.swordLength;
+                this.sword.y = this.body.position.y;
+                this.sword.angle = 90;
                 break;
         }
     }
@@ -141,20 +141,20 @@ export default function(scene) {
 
         switch(this.direction) {
             case "top":
-                this.swordVector.x = this.body.position.x + 25;
-                this.swordVector.y = this.body.position.y;
-                break;
-            case "bottom":
-                this.swordVector.x = this.body.position.x + 25;
-                this.swordVector.y = this.body.position.y + 25;
-                break;
-            case "left":
                 this.swordVector.x = this.body.position.x;
                 this.swordVector.y = this.body.position.y + 25;
                 break;
+            case "bottom":
+                this.swordVector.x = this.body.position.x + 50;
+                this.swordVector.y = this.body.position.y + 25;
+                break;
+            case "left":
+                this.swordVector.x = this.body.position.x + 25;
+                this.swordVector.y = this.body.position.y + 50;
+                break;
             case "right":
                 this.swordVector.x = this.body.position.x + 25;
-                this.swordVector.y = this.body.position.y + 25;
+                this.swordVector.y = this.body.position.y;
                 break;
         } 
         scene.physics.moveToObject(this.sword, this.swordVector, 20, 500);
