@@ -55,13 +55,13 @@ This is going to be a top down 2D rouge-like dungeon crawler! The game will star
 * The code structure is kind of bonkers, and I would like to clean it up and refactor it to be more expandable. Right now it's very tightly coupled.
 
 ## Images of Game Play
-Spawning into the start area
+#### Spawning into the start area  
 ![Start Area](/assets/starting_area.png)
 
-Moving to a new room
+#### Moving to a new room  
 ![switching rooms](/assets/switching_rooms.png)
 
-Ghosts Spawning
+#### Ghosts Spawning  
 ![ghosties](/assets/ghosties_spawn.png)
 
 ## Game Planning and Implementation
